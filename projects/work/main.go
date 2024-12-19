@@ -2,15 +2,26 @@ package main
 
 import (
 	"fmt"
-	"time"
-	// "sync"
+	"sync"
 )
 
 func work() {
-	time.Sleep(time.Millisecond * 50)
-	fmt.Println("done")
+	
+	fmt.Println("WORK!!")
 }
 
 func main() {
-	// необходимо в отдельных горутинах вызвать функцию work() 10 раз и дождаться результатов выполнения вызванных функций
+	var wg sync.WaitGroup 
+
+	wg.Add(10) 
+
+	for i := 0; i < 10; i++ {
+		go func() {
+			defer wg.Done() 
+			work()          
+		}()
+	}
+
+	wg.Wait() 
+	fmt.Println("Ура! Все горутины завершились!")
 }
